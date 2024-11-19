@@ -43,7 +43,7 @@ QJsonObject Widget::toJson() const {
     return {
         {"authors", qjsh::arrayToValue(authors)},
         {"properties", qjsh::objArrayToValue(properties)},
-        {"extraProperties", qjsh::optObjArrayToValue(properties)},
+        {"extraProperties", qjsh::optObjArrayToValue(extraProperties)},
         {"window", qjsh::optObjToValue(window)}
     };
 }

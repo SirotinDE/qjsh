@@ -250,7 +250,7 @@ static const auto objArrayToValue = [](auto&& data) -> QJsonValue {
 
 static const auto optObjArrayToValue = [](auto&& data) -> QJsonValue {
     QJsonArray arr;
-    for (const auto& jv : data) {
+    for (const auto& jv : data.value()) {
         arr.push_back(jv.toJson());
     }
     return arr;
