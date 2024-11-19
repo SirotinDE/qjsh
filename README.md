@@ -33,7 +33,7 @@ Property::Property(const QJsonObject &j)
 QJsonObject Property::toJson() const {
     return {
         {"name", name},
-        {"value", qjsh::optToValue(value)},
+        {"value", optToValue(value)},
     };
 }
 
@@ -86,8 +86,8 @@ QJsonObject Window::toJson() const {
     return {
         {"width", width},
         {"height", height},
-        {"scale", qjsh::optToValue(scale)},
-        {"name", qjsh::optToValue(name)}
+        {"scale", optToValue(scale)},
+        {"name", optToValue(name)}
     };
 }
 
@@ -100,10 +100,10 @@ Widget::Widget(const QJsonObject &j)
 
 QJsonObject Widget::toJson() const {
     return {
-        {"authors", qjsh::arrayToValue(authors)},
-        {"properties", qjsh::objArrayToValue(properties)},
-        {"extraProperties", qjsh::optObjArrayToValue(extraProperties)},
-        {"window", qjsh::optObjToValue(window)}
+        {"authors", arrayToValue(authors)},
+        {"properties", objArrayToValue(properties)},
+        {"extraProperties", optObjArrayToValue(extraProperties)},
+        {"window", optObjToValue(window)}
     };
 }
 
