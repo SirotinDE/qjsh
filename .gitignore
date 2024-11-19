@@ -1,0 +1,10 @@
+*.o
+*.qm
+*.pro.user
+*.user
+build
+CMakeLists.txt.user*
+CMakeCache.txt*
+CMakeFiles*
+
+.DS_Store
