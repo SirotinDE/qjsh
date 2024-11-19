@@ -22,7 +22,7 @@ struct Property {
 
     Property(const QJsonObject& j);
     Property() = default;
-    QJsonObject toJson() const;;
+    QJsonObject toJson() const;
 };
 
 struct Widget {
