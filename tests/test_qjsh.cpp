@@ -1,4 +1,5 @@
 #include <QJsonDocument>
+#include <QDateTime>
 
 #include <gtest/gtest.h>
 
@@ -30,6 +31,7 @@ constexpr auto data = R"(
                 "name": "reaction"
             }
         ],
+        "idleAt": "2022-10-10T09:10:11",
         "extraProperties": [
             {
                 "name": "hello",
@@ -50,6 +52,7 @@ constexpr auto data = R"(
     Widget w(obj["widget"].toObject());
     EXPECT_EQ(w.authors.size(), 1);
     EXPECT_EQ(w.authors[0], "Dmitry");
+    EXPECT_EQ(w.idleAt, QDateTime::fromString("2022-10-10T09:10:11", Qt::ISODate));
     EXPECT_EQ(w.properties.size(), 2);
     EXPECT_EQ(w.properties[0].name, "readonly");
     EXPECT_EQ(w.properties[0].value, "true");

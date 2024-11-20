@@ -3,6 +3,7 @@
 #include <optional>
 
 #include <QString>
+#include <QDateTime>
 #include <QJsonObject>
 
 struct Window {
@@ -28,6 +29,7 @@ struct Property {
 struct Widget {
     QVector<QString> authors;
     QVector<Property> properties;
+    std::optional<QDateTime> idleAt;
     std::optional<QVector<Property>> extraProperties;
     std::optional<Window> window;
 

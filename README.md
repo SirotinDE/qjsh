@@ -46,6 +46,7 @@ More examples
 #include <optional>
 #include <QString>
 #include <QVector>
+#include <QDateTime>
 #include "property.h"
 
 struct Window {
@@ -62,6 +63,7 @@ struct Window {
 struct Widget {
     QVector<QString> authors;
     QVector<Property> properties;
+    std::optional<QDateTime> idleAt;
     std::optional<QVector<Property>> extraProperties;
     std::optional<Window> window;
 
@@ -94,6 +96,7 @@ QJsonObject Window::toJson() const {
 Widget::Widget(const QJsonObject &j)
     : authors(Extract(j,"authors"))
     , properties(Extract(j,"properties").toObjectsVector<Property>())
+    , idleAt(ExtractOpt(j,"idleAt"))
     , extraProperties(ExtractOpt(j,"extraProperties").toObjectsVector<Property>())
     , window(ExtractOpt(j,"window").toObject<Window>())
 {}
@@ -102,6 +105,7 @@ QJsonObject Widget::toJson() const {
     return {
         {"authors", arrayToValue(authors)},
         {"properties", objArrayToValue(properties)},
+        {"idleAt", qjsh::optDtToValue(idleAt)},
         {"extraProperties", optObjArrayToValue(extraProperties)},
         {"window", optObjToValue(window)}
     };
@@ -136,6 +140,7 @@ constexpr auto data = R"(
                 "name": "reaction"
             }
         ],
+        "idleAt": "2022-10-10T09:10:11",
         "extraProperties": [
             {
                 "name": "hello",

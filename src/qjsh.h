@@ -2,8 +2,11 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QVector>
+#include <QDateTime>
 
 namespace qjsh {
+
+constexpr auto dtFormat = Qt::DateFormat::ISODate;
 
 struct Extract {
     QJsonValueConstRef v;
@@ -53,6 +56,23 @@ struct Extract {
             throw std::runtime_error("value is not string");
         }
         return v.toString();
+    }
+
+    operator std::optional<QDateTime>() = delete;
+    inline operator QDateTime() {
+        if (!v.isString()) {
+            throw std::runtime_error("value is not string");
+        }
+        return QDateTime::fromString(v.toString(), dtFormat);
+    }
+
+
+    operator std::optional<QDate>() = delete;
+    inline operator QDate() {
+        if (!v.isString()) {
+            throw std::runtime_error("value is not string");
+        }
+        return QDate::fromString(v.toString(), dtFormat);
     }
 
     template <typename T>
@@ -177,6 +197,26 @@ struct ExtractOpt {
         return v.toString();
     }
 
+    operator QDateTime() = delete;
+    inline operator  std::optional<QDateTime>() {
+        if (v.isNull() || v.isUndefined()) {
+            return std::nullopt;
+        }
+        if (!v.isString()) {
+            throw std::runtime_error("value is not string");
+        }
+        return QDateTime::fromString(v.toString(), dtFormat);
+    }
+
+
+    operator QDate() = delete;
+    inline operator std::optional<QDate>() {
+        if (!v.isString()) {
+            throw std::runtime_error("value is not string");
+        }
+        return QDate::fromString(v.toString(), dtFormat);
+    }
+
     template <typename T>
     std::optional<T> toObject() {
         if (v.isNull() || v.isUndefined()) {
@@ -258,5 +298,7 @@ static const auto optObjArrayToValue = [](auto&& data) -> QJsonValue {
 
 static const auto optToValue = [](auto&& data) -> QJsonValue { return data ? data.value() : QJsonValue(); };
 static const auto optObjToValue = [](auto&& data) -> QJsonValue { return data ? data.value().toJson() : QJsonValue(); };
+static const auto dtToValue = [](auto&& data) -> QJsonValue { return data.toString(dtFormat); };
+static const auto optDtToValue = [](auto&& data) -> QJsonValue { return data ? data->toString(dtFormat) : QJsonValue(); };
 
 }  // namespace qjsh

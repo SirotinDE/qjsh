@@ -35,6 +35,7 @@ QJsonObject Property::toJson() const {
 Widget::Widget(const QJsonObject &j)
     : authors(Extract(j,"authors"))
     , properties(Extract(j,"properties").toObjectsVector<Property>())
+    , idleAt(ExtractOpt(j,"idleAt"))
     , extraProperties(ExtractOpt(j,"extraProperties").toObjectsVector<Property>())
     , window(ExtractOpt(j,"window").toObject<Window>())
 {}
@@ -43,6 +44,7 @@ QJsonObject Widget::toJson() const {
     return {
         {"authors", qjsh::arrayToValue(authors)},
         {"properties", qjsh::objArrayToValue(properties)},
+        {"idleAt", qjsh::optDtToValue(idleAt)},
         {"extraProperties", qjsh::optObjArrayToValue(extraProperties)},
         {"window", qjsh::optObjToValue(window)}
     };
