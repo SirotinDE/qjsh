@@ -5,6 +5,8 @@
 #include "test_data/Widget.h"
 #include "test_data/Numbers.h"
 
+#include <qjsh_util.h>
+
 
 static QJsonObject getObject(const char* c) {
     auto jsonDocument = QJsonDocument::fromJson(c);
@@ -120,27 +122,28 @@ TEST(Json, NumbersEmptyOpt)
     numbers.vb = {true, false};
 
     auto json = numbers.toJson();
-    Numbers numbersFromJson(json);
+    auto numbersFromJson = qjsh::parse<Numbers>(json);
+    EXPECT_EQ(numbersFromJson.has_value(), true);
 
-    EXPECT_EQ(numbers.i, numbersFromJson.i);
-    EXPECT_EQ(numbers.oi, numbersFromJson.oi);
-    EXPECT_EQ(numbers.vi, numbersFromJson.vi);
-    EXPECT_EQ(numbers.ovi, numbersFromJson.ovi);
+    EXPECT_EQ(numbers.i, numbersFromJson->i);
+    EXPECT_EQ(numbers.oi, numbersFromJson->oi);
+    EXPECT_EQ(numbers.vi, numbersFromJson->vi);
+    EXPECT_EQ(numbers.ovi, numbersFromJson->ovi);
 
-    EXPECT_EQ(numbers.qi, numbersFromJson.qi);
-    EXPECT_EQ(numbers.oqi, numbersFromJson.oqi);
-    EXPECT_EQ(numbers.vqi, numbersFromJson.vqi);
-    EXPECT_EQ(numbers.ovqi, numbersFromJson.ovqi);
+    EXPECT_EQ(numbers.qi, numbersFromJson->qi);
+    EXPECT_EQ(numbers.oqi, numbersFromJson->oqi);
+    EXPECT_EQ(numbers.vqi, numbersFromJson->vqi);
+    EXPECT_EQ(numbers.ovqi, numbersFromJson->ovqi);
 
-    EXPECT_EQ(numbers.d, numbersFromJson.d);
-    EXPECT_EQ(numbers.od, numbersFromJson.od);
-    EXPECT_EQ(numbers.vd, numbersFromJson.vd);
-    EXPECT_EQ(numbers.ovd, numbersFromJson.ovd);
+    EXPECT_EQ(numbers.d, numbersFromJson->d);
+    EXPECT_EQ(numbers.od, numbersFromJson->od);
+    EXPECT_EQ(numbers.vd, numbersFromJson->vd);
+    EXPECT_EQ(numbers.ovd, numbersFromJson->ovd);
 
-    EXPECT_EQ(numbers.b, numbersFromJson.b);
-    EXPECT_EQ(numbers.ob, numbersFromJson.ob);
-    EXPECT_EQ(numbers.vb, numbersFromJson.vb);
-    EXPECT_EQ(numbers.ovb, numbersFromJson.ovb);
+    EXPECT_EQ(numbers.b, numbersFromJson->b);
+    EXPECT_EQ(numbers.ob, numbersFromJson->ob);
+    EXPECT_EQ(numbers.vb, numbersFromJson->vb);
+    EXPECT_EQ(numbers.ovb, numbersFromJson->ovb);
 }
 
 TEST(Json, NumbersNotANumber)
@@ -152,14 +155,9 @@ constexpr auto i_data = R"(
 }
 
 )";
-    auto obj = getObject(i_data);
-    bool parsedOk = false;
-    try {
-        Numbers numbers(obj);
-    } catch (...) {
-        parsedOk = true;
-    }
-
-    EXPECT_EQ(parsedOk, true);
+    auto value = getObject(i_data);
+    auto obj = value["widget"].toObject();
+    auto numbers = qjsh::parse<Numbers>(obj);
+    EXPECT_EQ(numbers.has_value(), false);
 }
 

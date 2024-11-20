@@ -3,5 +3,5 @@ project("qjsh" VERSION 0.0.1
              HOMEPAGE_URL "https://github.com/SirotinDE/qjsh")
 
 add_library(qjsh INTERFACE)
-target_include_directories(qjsh INTERFACE ./qjsh.h)
+target_include_directories(qjsh INTERFACE ./qjsh.h ./qjsh_util.h)
 

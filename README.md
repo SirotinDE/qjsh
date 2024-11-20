@@ -114,6 +114,7 @@ Usage example
 ```cpp
 
 #include <QJsonDocument>
+#include <qjsh_util.h>
 
 static QJsonObject getJson(const char* c) {
     auto jsonDocument = QJsonDocument::fromJson(c);
@@ -152,12 +153,22 @@ constexpr auto data = R"(
 )";
 
 auto obj = getJson(data);
-// may throw with wrong json
+auto widgetObj = obj["widget"].toObject();
+
+// usage without exception
+auto widgetOpt = qjsh::parse<Numbers>(widgetObj);
+if (!widgetOpt) {
+    return;
+}
+
+// with exception if wrong json
 try {
-    Widget widget(obj["widget"].toObject());
+    Widget widget(widgetObj);
 // use widget
 } catch (...) {
     
 }
+
+
 
 ```
